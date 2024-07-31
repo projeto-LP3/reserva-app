@@ -20,11 +20,11 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/templates/reservas.html">Reservas</a>
+            <a class="nav-link" aria-current="page" href="/templates/reservas">Reservas</a>
             <!-- <a class="nav-link active" aria-current="page" href="/templates/reservas.html">Minhas Reservas</a> -->
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/templates/reservar-sala.html">Reservar Sala</a>
+            <a class="nav-link active" href="/templates/reservar-sala">Reservar Sala</a>
           </li>
 
           <li class="nav-item dropdown">
@@ -32,12 +32,12 @@
               Gerenciar Salas
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/templates/listar-salas.html">Listar Salas</a></li>
-              <li><a class="dropdown-item" href="/templates/cadastrar-sala.html">Cadastrar Sala</a></li>
+              <li><a class="dropdown-item" href="/templates/listar-salas">Listar Salas</a></li>
+              <li><a class="dropdown-item" href="/templates/cadastrar-sala">Cadastrar Sala</a></li>
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/templates/login.html">Logout</a>
+            <a class="nav-link" href="/templates/login">Logout</a>
           </li>
         </ul>
       </div>
@@ -53,14 +53,14 @@
     </div>
     <div>
       <div class="col">
-        <form action="/templates/reserva/detalhe-reserva.html">
+        <form action="/templates/reservar-sala" method="post">
           <div class="mb-3">
             <label for="sala" class="form-label">Sala</label>
             <select class="form-select" id="sala" name="sala">
               <option selected>Selecione a sala</option>
-              <option value="1">Sala 1</option>
-              <option value="2">Sala 2</option>
-              <option value="3">Sala 3</option>
+              {%for sala in salas %}
+              <option value="{{sala.id}}">sala:{{sala.id}}</option>
+              {%endfor%}
             </select>
           </div>
           <div class="mb-3">
@@ -68,8 +68,8 @@
             <input type="datetime-local" class="form-control" name="inicio" id="inicio">
           </div>
           <div class="mb-3">
-            <label for="inicio" class="form-label">Data e Hora Fim</label>
-            <input type="datetime-local" class="form-control" name="inicio" id="inicio">
+            <label for="fim" class="form-label">Data e Hora Fim</label>
+            <input type="datetime-local" class="form-control" name="fim" id="fim">
           </div>
           <button type="submit" class="btn btn-dark">Reservar</button>
         </form>
