@@ -1,3 +1,90 @@
+from conexao_bd import conexao_fechar, conexao_abrir
+
+def clienteListar(con):
+    cursor = con.cursor()
+    sql = "SELECT * FROM cliente"
+    # Criando o cursor com a opção de retorno como dicionário   
+    cursor = con.cursor(dictionary=True)
+    cursor.execute(sql)
+
+    for (registro) in cursor:
+        print(registro['cli_nome'] + " - "+ registro['cli_fone'])
+
+    cursor.close()
+    #con.commit()    #mesma coisa q editar e não salvar
+
+
+def clienteInserir(con, codigo, nome, fone, email):
+     cursor = con.cursor()
+     sql = "INSERT INTO cliente (cli_codigo, cli_nome, cli_fone, cli_email) VALUES (%s, %s, %s, %s)"
+     cursor.execute(sql, (codigo, nome, fone, email))
+     con.commit() 
+     cursor.close()
+        
+
+def main():
+    con = conexao_abrir("localhost", "root", "", "teste_python")
+    
+    clienteInserir(con, 10, "evandro", "8876-2222","teste@teste")
+    clienteListar(con)
+
+    conexao_fechar(con)
+
+
+if __name__ == "__main__":
+	main()
+
+# -- phpMyAdmin SQL Dump
+# -- version 5.2.1
+# -- https://www.phpmyadmin.net/
+# --
+# -- Host: 127.0.0.1
+# -- Tempo de geração: 02/10/-- phpMyAdmin SQL Dump
+# -- version 5.2.1
+# -- https://www.phpmyadmin.net/
+# --
+# -- Host: 127.0.0.1
+# -- Tempo de geração: 02/10/2024 às 16:07
+# -- Versão do servidor: 10.4.32-MariaDB
+# -- Versão do PHP: 8.2.12
+
+# SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+# START TRANSACTION;
+# SET time_zone = "+00:00";
+
+
+# /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+# /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+# /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+# /*!40101 SET NAMES utf8mb4 */;
+
+# --
+# -- Banco de dados: `teste_python`
+# --
+# CREATE DATABASE IF NOT EXISTS `teste_python` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+# USE `teste_python`;
+
+# -- --------------------------------------------------------
+
+# --
+# -- Estrutura para tabela `sala`
+# --
+
+# CREATE TABLE `sala` (
+
+#   `id` int(11) NOT NULL,
+#   `tipo` varchar(100) NOT NULL,
+#   `descricao` varchar(14) NOT NULL,
+#   `capacidade` varchar(50) NOT NULL,
+# `ativa` varchar(50) NOT NULL,ativa
+# ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+
+
+
+
 def obter_salas():
     with open("cadastro-sala.csv", "r") as file:
         lista_sala = []
