@@ -1,114 +1,148 @@
 from conexao_bd import conexao_fechar, conexao_abrir
 
-def clienteListar(con):
+def salaListar(con):
     cursor = con.cursor()
-    sql = "SELECT * FROM cliente"
+    sql = "SELECT * FROM sala"
     # Criando o cursor com a opção de retorno como dicionário   
     cursor = con.cursor(dictionary=True)
     cursor.execute(sql)
 
     for (registro) in cursor:
-        print(registro['cli_nome'] + " - "+ registro['cli_fone'])
+        print(registro['tipo']+ " - "+ registro['capacidade']+ " - "+ registro['descricao']+ " - "+ registro['ativa'])
 
     cursor.close()
-    #con.commit()    #mesma coisa q editar e não salvar
 
-
-def clienteInserir(con, codigo, nome, fone, email):
+def salaInserir(con, id, tipo, capacidade, descricao, ativa):
      cursor = con.cursor()
-     sql = "INSERT INTO cliente (cli_codigo, cli_nome, cli_fone, cli_email) VALUES (%s, %s, %s, %s)"
-     cursor.execute(sql, (codigo, nome, fone, email))
+     sql = "INSERT INTO sala (id, tipo, capacidade, descricao, ativa) VALUES (%s, %s, %s, %s, %s)"
+     cursor.execute(sql, (id, tipo, capacidade, descricao, ativa))
      con.commit() 
      cursor.close()
-        
+
+def salaAtualizar(con, id, tipo=None, capacidade=None, descricao=None, ativa=None):
+    cursor = con.cursor()
+    sql = "UPDATE sala SET "
+    updates = []
+    params = []
+
+    if tipo:
+        updates.append("tipo = %s")
+        params.append(tipo)
+    if capacidade:  
+        updates.append("capacidade = %s")
+        params.append(capacidade)
+    if descricao:
+        updates.append("descricao = %s")
+        params.append(descricao)
+    if ativa is not None:
+        updates.append("ativa = %s")
+        params.append(ativa)
+
+    sql += ", ".join(updates) + " WHERE id = %s"
+    params.append(id)
+
+    cursor.execute(sql, params)
+    con.commit()
+    cursor.close()
+
+def salaDeletar(con, id):
+    cursor = con.cursor()
+    sql = "DELETE FROM sala WHERE id = %s"
+    cursor.execute(sql, (id,))
+    con.commit()
+    cursor.close()
+
+def usuarioListar(con):
+    cursor = con.cursor(dictionary=True)
+    sql = "SELECT * FROM usuario"
+    cursor.execute(sql)
+
+    for registro in cursor:
+        print(f"{registro['id']} - {registro['nome']} - {registro['email']}")
+
+    cursor.close()
+
+def usuarioInserir(con, nome, email, senha):
+    cursor = con.cursor()
+    sql = "INSERT INTO usuario (nome, email, senha) VALUES (%s, %s, %s)"
+    cursor.execute(sql, (nome, email, senha))
+    con.commit()
+    cursor.close()
+
+def usuarioAtualizar(con, id, nome=None, email=None, senha=None):
+    cursor = con.cursor()
+    sql = "UPDATE usuario SET "
+    updates = []
+    params = []
+
+    if nome:
+        updates.append("nome = %s")
+        params.append(nome)
+    if email:
+        updates.append("email = %s")
+        params.append(email)
+    if senha:
+        updates.append("senha = %s")
+        params.append(senha)
+
+    sql += ", ".join(updates) + " WHERE id = %s"
+    params.append(id)
+
+    cursor.execute(sql, params)
+    con.commit()
+    cursor.close()
+
+def usuarioDeletar(con, id):
+    cursor = con.cursor()
+    sql = "DELETE FROM usuario WHERE id = %s"
+    cursor.execute(sql, (id,))
+    con.commit()
+    cursor.close()
 
 def main():
-    con = conexao_abrir("localhost", "root", "", "teste_python")
+    con = conexao_abrir("localhost", "root", "estudante1", "estudante1")
     
-    clienteInserir(con, 10, "evandro", "8876-2222","teste@teste")
-    clienteListar(con)
+    salaInserir(con, "laboratório", 40, "Laboratório de química", True)
+    # salaAtualizar(con, 1, tipo="Sala de aula", capacidade=45)
+    # salaDeletar(con, 1)
+    salaListar(con)
+
+    usuarioInserir(con, "João", "joao@email.com", "abc123")
+    # usuarioAtualizar(con, 1, nome="João Guilherme", email="joaogui@example.com")
+    # usuarioDeletar(con, 1)
+    usuarioListar(con)
 
     conexao_fechar(con)
 
-
 if __name__ == "__main__":
-	main()
-
-# -- phpMyAdmin SQL Dump
-# -- version 5.2.1
-# -- https://www.phpmyadmin.net/
-# --
-# -- Host: 127.0.0.1
-# -- Tempo de geração: 02/10/-- phpMyAdmin SQL Dump
-# -- version 5.2.1
-# -- https://www.phpmyadmin.net/
-# --
-# -- Host: 127.0.0.1
-# -- Tempo de geração: 02/10/2024 às 16:07
-# -- Versão do servidor: 10.4.32-MariaDB
-# -- Versão do PHP: 8.2.12
-
-# SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-# START TRANSACTION;
-# SET time_zone = "+00:00";
-
-
-# /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-# /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-# /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-# /*!40101 SET NAMES utf8mb4 */;
-
-# --
-# -- Banco de dados: `teste_python`
-# --
-# CREATE DATABASE IF NOT EXISTS `teste_python` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-# USE `teste_python`;
-
-# -- --------------------------------------------------------
-
-# --
-# -- Estrutura para tabela `sala`
-# --
-
-# CREATE TABLE `sala` (
-
-#   `id` int(11) NOT NULL,
-#   `tipo` varchar(100) NOT NULL,
-#   `descricao` varchar(14) NOT NULL,
-#   `capacidade` varchar(50) NOT NULL,
-# `ativa` varchar(50) NOT NULL,ativa
-# ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    main()
 
 
 
+# def obter_salas():
+#     with open("cadastro-sala.csv", "r") as file:
+#         lista_sala = []
+#         for linha in file:
+#             id, tipo, descricao, capacidade, ativa = linha.strip().split(",")
+#             sala = {
+#                 "id": int(id),
+#                 "tipo": tipo,
+#                 "descricao": descricao,
+#                 "capacidade": capacidade,
+#                 "ativa": ativa
+#             }
+#             lista_sala.append(sala)
 
-
-
-
-def obter_salas():
-    with open("cadastro-sala.csv", "r") as file:
-        lista_sala = []
-        for linha in file:
-            id, tipo, descricao, capacidade, ativa = linha.strip().split(",")
-            sala = {
-                "id": int(id),
-                "tipo": tipo,
-                "descricao": descricao,
-                "capacidade": capacidade,
-                "ativa": ativa
-            }
-            lista_sala.append(sala)
-
-        lista_sala.sort(key=lambda x: x['id'])
+#         lista_sala.sort(key=lambda x: x['id'])
         
-        return lista_sala
+#         return lista_sala
     
-obter_salas()
+# obter_salas()
 
-def adicionar_sala(s):
-    with open("cadastro-sala.csv", "a") as file:
-        linha = f"{s['id']},{s['tipo']},{s['descricao']},{s['capacidade']},{s['ativa']}\n"
-        file.write(linha)
+# def adicionar_sala(s):
+#     with open("cadastro-sala.csv", "a") as file:
+#         linha = f"{s['id']},{s['tipo']},{s['descricao']},{s['capacidade']},{s['ativa']}\n"
+#         file.write(linha)
 
 
 def busca_binaria_salas(lista, id):
@@ -125,28 +159,28 @@ def busca_binaria_salas(lista, id):
 
     return None
 
-def obter_usuario():
-    with open("cadastro-usuario.csv", "r") as file:
-        lista_usuario = []
-        for linha in file:
-            nome, email, senha= linha.strip().split(",")
-            usuario = {
-                "nome": nome,
-                "email": email,
-                "senha": senha
-            }
-            lista_usuario.append(usuario)
+# def obter_usuario():
+#     with open("cadastro-usuario.csv", "r") as file:
+#         lista_usuario = []
+#         for linha in file:
+#             nome, email, senha= linha.strip().split(",")
+#             usuario = {
+#                 "nome": nome,
+#                 "email": email,
+#                 "senha": senha
+#             }
+#             lista_usuario.append(usuario)
 
-        lista_usuario.sort(key=lambda x: x['nome'])
+#         lista_usuario.sort(key=lambda x: x['nome'])
         
-        return lista_usuario
+#         return lista_usuario
 
-obter_usuario()
+# obter_usuario()
 
-def adicionar_usuario(u):
-    with open("cadastro-usuario.csv", "a") as file:
-        linha = f"{u['nome']},{u['email']},{u['senha']}\n"
-        file.write(linha)
+# def adicionar_usuario(u):
+#     with open("cadastro-usuario.csv", "a") as file:
+#         linha = f"{u['nome']},{u['email']},{u['senha']}\n"
+#         file.write(linha)
 
 
 def busca_binaria_usuarios(lista, nome):

@@ -1,18 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from reserva_app.reserva import adicionar_reserva, adicionar_sala, adicionar_usuario, obter_salas
 
-# lista_sala = [
-#     {"id": "1", "tipo": "Sala de aula", "descricao": "PCs com intel i5, 8GB de RAM", "capacidade": "20", "ativa": True}
-# ]
-
-# lista_usuario = [
-#     {"nome": "ana", "email": "maya@email.com", "senha": "sbhsgksg"}
-# ]
-
-# lista_reseva = [
-#     {"sala": "1", "inicio": "Sala de aula", "d": "PCs com intel i5, 8GB de RAM", "capacidade": "20", "ativa": True}
-# ]
-
 app = Flask("minha app")
 
 
